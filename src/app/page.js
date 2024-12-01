@@ -1,7 +1,6 @@
 "use client"; // Add this line at the very top
 
 import React, { useEffect, useState } from "react";
-import { UserIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
   // State to track time spent in the air (in microseconds)
@@ -57,15 +56,19 @@ export default function Home() {
               }`}
               style={{ top: `${Math.random() * 50}%` }} // Randomized Y position
             >
-              <UserIcon className="h-16 w-16 text-blue-500" />
+              <img
+                src="/angel.png"
+                alt="Flying Hero"
+                className="h-16 w-16 object-contain"
+              />
             </div>
-            <span>Live Game Interface</span>
+            {/* <span>Live Game Interface</span> */}
           </div>
 
           {/* Microseconds Display */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold">
-              Time in Air: {timeInAir} µs
+              Time in Air: {timeInAir} secs
             </h3>
           </div>
 
