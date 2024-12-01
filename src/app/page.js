@@ -1,7 +1,33 @@
-import React from "react";
-import { RocketLaunchIcon } from "@heroicons/react/24/solid";
+"use client"; // Add this line at the very top
+
+import React, { useEffect, useState } from "react";
+import { UserIcon } from "@heroicons/react/24/solid";
 
 export default function Home() {
+  // State to track time spent in the air (in microseconds)
+  const [timeInAir, setTimeInAir] = useState(0);
+  const [isFlying, setIsFlying] = useState(false);
+
+  // Function to handle the flying animation and time tracking
+  useEffect(() => {
+    let timer; // No need for types in plain JavaScript
+
+    // Start flying when the game starts
+    if (isFlying) {
+      const startTime = Date.now();
+
+      // Update the time in air every millisecond
+      timer = window.setInterval(() => {
+        setTimeInAir(Math.floor((Date.now() - startTime) / 1000)); // Convert ms to microseconds
+      }, 1);
+    } else {
+      setTimeInAir(0); // Reset time when flying stops
+    }
+
+    // Clean up interval when flying stops
+    return () => clearInterval(timer);
+  }, [isFlying]);
+
   return (
     <div className="bg-gray-900 text-white min-h-screen flex flex-col">
       {/* Header */}
@@ -21,18 +47,36 @@ export default function Home() {
         {/* Game Interface */}
         <div className="bg-gray-700 rounded-lg p-6 shadow-md">
           <h2 className="text-xl font-bold mb-4">Aviator Game</h2>
-          <div className="bg-black rounded-md h-56 flex items-center justify-center text-2xl text-white">
-            <RocketLaunchIcon className="h-16 w-16 text-green-500 animate-pulse" />
+          <div className="relative bg-black rounded-md h-56 flex items-center justify-center text-2xl text-white">
+            {/* Superhero Flying Animation */}
+            <div
+              className={`absolute transition-all duration-1000 ease-in-out ${
+                isFlying
+                  ? "transform translate-y-[-150px]"
+                  : "transform translate-y-0"
+              }`}
+              style={{ top: `${Math.random() * 50}%` }} // Randomized Y position
+            >
+              <UserIcon className="h-16 w-16 text-blue-500" />
+            </div>
             <span>Live Game Interface</span>
           </div>
-          {/* Scoreboard */}
+
+          {/* Microseconds Display */}
           <div className="mt-6">
-            <h3 className="text-lg font-semibold">Live Scores</h3>
-            <ul className="mt-2">
-              <li>Player1: 120x</li>
-              <li>Player2: 95x</li>
-              <li>Player3: 88x</li>
-            </ul>
+            <h3 className="text-lg font-semibold">
+              Time in Air: {timeInAir} µs
+            </h3>
+          </div>
+
+          {/* Button to start/stop flying */}
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={() => setIsFlying(!isFlying)}
+              className="bg-green-500 text-white py-2 px-4 rounded-md"
+            >
+              {isFlying ? "Stop Flying" : "Start Flying"}
+            </button>
           </div>
         </div>
       </main>
